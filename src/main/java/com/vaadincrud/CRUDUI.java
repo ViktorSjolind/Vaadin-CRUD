@@ -1,4 +1,4 @@
-package com.vaadindemo;
+package com.vaadincrud;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;

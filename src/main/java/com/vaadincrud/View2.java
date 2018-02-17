@@ -1,4 +1,4 @@
-package com.vaadindemo;
+package com.vaadincrud;
 
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Composite;
