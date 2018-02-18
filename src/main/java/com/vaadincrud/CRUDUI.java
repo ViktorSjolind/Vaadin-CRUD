@@ -1,15 +1,23 @@
 package com.vaadincrud;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.PushStateNavigation;
+import com.vaadin.navigator.View;
+import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.spring.annotation.SpringViewDisplay;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 
@@ -22,38 +30,64 @@ import com.vaadin.ui.themes.ValoTheme;
  Data binding any field component can be bound to beans or grouped as forms
  Selection component: listselect, checkboxgroup, can be bound to SQL DB
  
- 
+ Can only auto-wire into Spring managed beans
  
  */
 
 
-@SpringUI
+
 @Theme("valo")
 @PushStateNavigation
-public class CRUDUI extends UI{	
+@SpringUI
+@SpringViewDisplay
+public class CRUDUI extends UI implements ViewDisplay{	
 	
-	private Navigator navigator;
-	private HorizontalLayout mainLayout;
-	private CssLayout viewContainer;	
-	private CssLayout menuContainer;
+	@Autowired
+	private Greeting greeting;	
+	private Panel springViewDisplay;	
 	
 	@Override
 	protected void init(VaadinRequest vaadinRequest){
 		
+		VerticalLayout  root = new VerticalLayout();
+		root.setSizeFull();
+		setContent(root);
+		
+		CssLayout navigationBar = new CssLayout();
+		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+		navigationBar.addComponent(createNavigationButton("Scoped View", "todoView"));
+		root.addComponent(navigationBar);
+		
+		springViewDisplay = new Panel();
+		springViewDisplay.setSizeFull();
+		root.addComponent(springViewDisplay);
+		root.setExpandRatio(springViewDisplay, 1.0f);
+		
+		/*
 		viewContainer = new CssLayout();
-		addMenu();		
-		mainLayout = new HorizontalLayout(menuContainer, viewContainer);
-		mainLayout.setSizeFull();			
-		setContent(mainLayout);		
+		addMenu();					
 		setupNavigator();
+		mainLayout = new HorizontalLayout(menuContainer, springViewDisplay);
+		mainLayout.setSizeFull();			
+		setContent(mainLayout);	
+		*/
 		
 	}
 	
+	private Button createNavigationButton(String caption, String viewName) {
+		Button button = new Button(caption);
+		button.addStyleName(ValoTheme.BUTTON_SMALL);
+		button.addClickListener(event -> getUI().getNavigator().navigateTo(viewName));
+	    return button;
+		
+		
+	}
+
 	private void addMenu() {
 		Label title = new Label("Menu");
 		title.addStyleName(ValoTheme.MENU_TITLE);
 		
-		Button buttonTodo = new Button("Todo", e->getNavigator().navigateTo("viewTodo"));
+		Button buttonTodo = new Button("Todo", "todoView");
 		buttonTodo.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
 		
 		Button button2 = new Button("View 2", e->getNavigator().navigateTo("view2"));
@@ -67,11 +101,22 @@ public class CRUDUI extends UI{
 
 	private void setupNavigator(){
 		//UI, container which will be replaced
-		navigator = new Navigator(this, viewContainer);		
+		//navigator = new Navigator(this, viewContainer);		
 		//bad practice? How to set a default view?
-		navigator.addView("", TodoView.class);
-		navigator.addView("viewTodo", TodoView.class);
-		navigator.addView("view2", View2.class);
+		//navigator.addView("", TodoView.class);		
+		//navigator.addView("viewTodo", TodoView.class);
+		//navigator.addView("view2", View2.class);
+		
+		springViewDisplay = new Panel();
+		
+		
+		
+	}
+
+	@Override
+	public void showView(View view) {
+		springViewDisplay.setContent((Component) view);
+		
 	}
 	
 	

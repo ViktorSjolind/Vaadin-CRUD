@@ -20,7 +20,9 @@ public class NoteService {
 	
 	public static NoteService getInstance(){		
 		if(instance == null){
-			instance = new NoteService();			
+			instance = new NoteService();
+			
+			
 		}
 		return instance;
 	}
@@ -28,14 +30,14 @@ public class NoteService {
 	public synchronized List<Note> findAll(){		
 		return noteRepository.findAll();
 		
-	}
-	
-	public String getTest(){
-		return "hueheuheuheUEHUWHEUWHEUH";
-	}
+	}	
 	
 	public synchronized Note findById(Long id){
 		return noteRepository.findById(id);
+	}
+	
+	public String getString(){
+		return "huehueh";
 	}
 	
 }
