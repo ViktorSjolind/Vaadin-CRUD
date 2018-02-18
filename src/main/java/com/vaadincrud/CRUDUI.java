@@ -29,7 +29,7 @@ import com.vaadin.ui.themes.ValoTheme;
  Field component: textfield, textarea, colorpicker... 
  Data binding any field component can be bound to beans or grouped as forms
  Selection component: listselect, checkboxgroup, can be bound to SQL DB
- 
+ Component interface: field component + selection component + e.g. button
  Can only auto-wire into Spring managed beans
  
  */
@@ -41,9 +41,7 @@ import com.vaadin.ui.themes.ValoTheme;
 @SpringUI
 @SpringViewDisplay
 public class CRUDUI extends UI implements ViewDisplay{	
-	
-	@Autowired
-	private Greeting greeting;	
+		
 	private Panel springViewDisplay;	
 	
 	@Override
@@ -51,11 +49,14 @@ public class CRUDUI extends UI implements ViewDisplay{
 		
 		VerticalLayout  root = new VerticalLayout();
 		root.setSizeFull();
+		//sets root layout
 		setContent(root);
+		
+		
 		
 		CssLayout navigationBar = new CssLayout();
 		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		navigationBar.addComponent(createNavigationButton("Scoped View", "todoView"));
+		navigationBar.addComponent(createNavigationButton("Todo", TodoView.VIEW_NAME));
 		root.addComponent(navigationBar);
 		
 		springViewDisplay = new Panel();
@@ -63,14 +64,7 @@ public class CRUDUI extends UI implements ViewDisplay{
 		root.addComponent(springViewDisplay);
 		root.setExpandRatio(springViewDisplay, 1.0f);
 		
-		/*
-		viewContainer = new CssLayout();
-		addMenu();					
-		setupNavigator();
-		mainLayout = new HorizontalLayout(menuContainer, springViewDisplay);
-		mainLayout.setSizeFull();			
-		setContent(mainLayout);	
-		*/
+		
 		
 	}
 	
@@ -83,35 +77,6 @@ public class CRUDUI extends UI implements ViewDisplay{
 		
 	}
 
-	private void addMenu() {
-		Label title = new Label("Menu");
-		title.addStyleName(ValoTheme.MENU_TITLE);
-		
-		Button buttonTodo = new Button("Todo", "todoView");
-		buttonTodo.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
-		
-		Button button2 = new Button("View 2", e->getNavigator().navigateTo("view2"));
-		button2.addStyleNames(ValoTheme.BUTTON_LINK, ValoTheme.MENU_ITEM);
-		
-		//renders components and their captions into a same div element
-		menuContainer = new CssLayout(title, buttonTodo, button2);
-		menuContainer.addStyleName(ValoTheme.MENU_ROOT);
-		
-	}
-
-	private void setupNavigator(){
-		//UI, container which will be replaced
-		//navigator = new Navigator(this, viewContainer);		
-		//bad practice? How to set a default view?
-		//navigator.addView("", TodoView.class);		
-		//navigator.addView("viewTodo", TodoView.class);
-		//navigator.addView("view2", View2.class);
-		
-		springViewDisplay = new Panel();
-		
-		
-		
-	}
 
 	@Override
 	public void showView(View view) {

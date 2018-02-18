@@ -11,22 +11,7 @@ public class NoteService {
 	
 	@Autowired
 	NoteRepository noteRepository;
-
-	private static NoteService instance;	
-	
-	public NoteService(){
 		
-	}	
-	
-	public static NoteService getInstance(){		
-		if(instance == null){
-			instance = new NoteService();
-			
-			
-		}
-		return instance;
-	}
-	
 	public synchronized List<Note> findAll(){		
 		return noteRepository.findAll();
 		
@@ -36,8 +21,5 @@ public class NoteService {
 		return noteRepository.findById(id);
 	}
 	
-	public String getString(){
-		return "huehueh";
-	}
 	
 }
