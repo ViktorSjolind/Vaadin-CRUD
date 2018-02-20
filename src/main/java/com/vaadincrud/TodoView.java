@@ -9,9 +9,16 @@ import org.springframework.context.annotation.Scope;
 
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
+import com.vaadin.ui.AbstractComponent;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Composite;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 
@@ -26,21 +33,54 @@ public class TodoView extends Composite implements View{
 	private NoteService noteService;	
 	private Grid<Note> grid;
 	private VerticalLayout root;
+	private VerticalLayout CRUDContainer;
+	private Button addButton;
+	private TextField noteTextField;
 	
 	public TodoView(){
 		root = new VerticalLayout();
-		setCompositionRoot(root);		
+		root.setSizeFull();
+		setCompositionRoot(root);				
 		grid = new Grid<>(Note.class);		
-		root.addComponent(new Label("Todo"));
-		root.addComponent(grid);
+		
+		CRUDContainer = new VerticalLayout();
+		
+		Layout inputContainer = addInputContainer();
+		CRUDContainer.addComponent(inputContainer);
+		CRUDContainer.setComponentAlignment(inputContainer, Alignment.TOP_CENTER);
+		CRUDContainer.addComponent(grid);					
+		CRUDContainer.setComponentAlignment(grid, Alignment.TOP_CENTER);
+		
+		root.addComponent(CRUDContainer);		
+		root.setComponentAlignment(CRUDContainer, Alignment.TOP_CENTER);
+		
 		
 	}
 	
+	private Layout addInputContainer() {
+		HorizontalLayout inputLayout = new HorizontalLayout();
+		
+		noteTextField = new TextField();
+		noteTextField.setValue("");
+		
+		addButton = new Button("Add Note", event -> {			
+			noteService.addNote(noteTextField.getValue());
+			grid.setItems(noteService.findAll());
+			
+		});		
+		
+		inputLayout.addComponent(addButton);
+		inputLayout.addComponent(noteTextField);
+		return inputLayout;
+	}
+
 	@PostConstruct
 	void init(){		
 		List<Note> notes = noteService.findAll();
 		grid.setItems(notes);		
-	}
+	}	
+	
+	
 
 }
 

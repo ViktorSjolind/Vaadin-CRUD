@@ -20,6 +20,13 @@ public class NoteService {
 	public synchronized Note findById(Long id){
 		return noteRepository.findById(id);
 	}
+
+	public synchronized void addNote(String description) {
+		Note newNote = new Note();
+		newNote.setDescription(description);
+		noteRepository.save(newNote);
+		
+	}
 	
 	
 }

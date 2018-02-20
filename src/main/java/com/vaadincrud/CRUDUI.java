@@ -1,23 +1,21 @@
 package com.vaadincrud;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.vaadin.annotations.Theme;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.PushStateNavigation;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.annotation.SpringViewDisplay;
+import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 
@@ -40,24 +38,18 @@ import com.vaadin.ui.themes.ValoTheme;
 @PushStateNavigation
 @SpringUI
 @SpringViewDisplay
+//viewdisplay gives navigator
 public class CRUDUI extends UI implements ViewDisplay{	
 		
-	private Panel springViewDisplay;	
-	
+	private Panel springViewDisplay;		
 	@Override
 	protected void init(VaadinRequest vaadinRequest){
 		
-		VerticalLayout  root = new VerticalLayout();
+		HorizontalLayout  root = new HorizontalLayout();
 		root.setSizeFull();
 		//sets root layout
-		setContent(root);
-		
-		
-		
-		CssLayout navigationBar = new CssLayout();
-		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
-		navigationBar.addComponent(createNavigationButton("Todo", TodoView.VIEW_NAME));
-		root.addComponent(navigationBar);
+		setContent(root);				
+		root.addComponent(addNavigationBar());
 		
 		springViewDisplay = new Panel();
 		springViewDisplay.setSizeFull();
@@ -68,8 +60,22 @@ public class CRUDUI extends UI implements ViewDisplay{
 		
 	}
 	
+	
+	
+	private Layout addNavigationBar(){
+		CssLayout navigationBar = new CssLayout();
+		navigationBar.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
+		navigationBar.addComponent(new Label("Menu"));
+		navigationBar.addComponent(createNavigationButton("Home", DefaultView.VIEW_NAME));
+		navigationBar.addComponent(createNavigationButton("Todo", TodoView.VIEW_NAME));
+
+		return navigationBar;
+		
+	}
+	
 	private Button createNavigationButton(String caption, String viewName) {
 		Button button = new Button(caption);
+		button.setWidth("100px");		
 		button.addStyleName(ValoTheme.BUTTON_SMALL);
 		button.addClickListener(event -> getUI().getNavigator().navigateTo(viewName));
 	    return button;

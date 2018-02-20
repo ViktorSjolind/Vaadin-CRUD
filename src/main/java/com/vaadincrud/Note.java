@@ -14,6 +14,8 @@ public class Note {
 	private int done;
 	private String date;
 	
+	
+	
 	public Long getId() {
 		return id;
 	}
