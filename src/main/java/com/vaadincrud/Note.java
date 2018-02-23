@@ -36,7 +36,10 @@ public class Note {
 	}
 	
 	
-	
+	@Override
+	public String toString(){
+		return Long.toString(id) + " " + description;
+	}
 	
 	
 }

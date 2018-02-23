@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.convert.Property;
 
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringView;
@@ -20,6 +21,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.renderers.ButtonRenderer;
 
 
 @SpringView(name = "todoView")
@@ -54,6 +56,16 @@ public class TodoView extends Composite implements View{
 		root.addComponent(CRUDContainer);		
 		root.setComponentAlignment(CRUDContainer, Alignment.TOP_CENTER);
 		
+		grid.addColumn(note -> "Delete", 
+				new ButtonRenderer(event -> {
+					System.out.println(event.getComponent());
+					System.out.println(event.getItem());
+					System.out.println(grid.getSelectedItems());
+					
+		}));
+		
+		
+		
 		
 	}
 	
@@ -64,6 +76,7 @@ public class TodoView extends Composite implements View{
 		noteTextField.setValue("");
 		
 		addButton = new Button("Add Note", event -> {			
+			//List of notes in Service?			
 			noteService.addNote(noteTextField.getValue());
 			grid.setItems(noteService.findAll());
 			
@@ -79,6 +92,8 @@ public class TodoView extends Composite implements View{
 		List<Note> notes = noteService.findAll();
 		grid.setItems(notes);		
 	}	
+	
+
 	
 	
 
